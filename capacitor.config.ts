@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'AyudaVerificada',
   webDir: 'www',
   server: {
-    url: 'https://web-jade-one-64.vercel.app',
+    url: 'https://ayuda-verificada.vercel.app',
     cleartext: false
   },
   android: {

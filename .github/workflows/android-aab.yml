@@ -12,6 +12,10 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
+      - name: Install dependencies
+        run: npm install
+      - name: Sync Capacitor
+        run: npx cap sync android
       - name: Decode keystore
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/app/release.keystore

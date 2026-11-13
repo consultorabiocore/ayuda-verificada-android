@@ -24,9 +24,11 @@ jobs:
           echo "Secrets present"
       - name: Decode keystore
         run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/app/release.keystore
+          printf '%s' "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/app/release.keystore
           printf '%s' "${{ secrets.KEYSTORE_PASSWORD }}" > android/app/storepass.txt
           printf '%s' "${{ secrets.KEYSTORE_PASSWORD }}" > android/app/keypass.txt
+          ls -l android/app/release.keystore
+          file android/app/release.keystore
       - name: Build unsigned release AAB
         run: |
           cd android

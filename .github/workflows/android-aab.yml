@@ -25,15 +25,22 @@ jobs:
       - name: Decode keystore
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/app/release.keystore
-      - name: Build release AAB
+          printf '%s' "${{ secrets.KEYSTORE_PASSWORD }}" > android/app/storepass.txt
+          printf '%s' "${{ secrets.KEYSTORE_PASSWORD }}" > android/app/keypass.txt
+      - name: Build unsigned release AAB
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew bundleRelease \
-            -Pandroid.injected.signing.store.file=$PWD/app/release.keystore \
-            -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
-            -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
-            -Pandroid.injected.signing.key.password=${{ secrets.KEYSTORE_PASSWORD }}
+          ./gradlew bundleRelease
+      - name: Sign AAB with jarsigner
+        run: |
+          cd android
+          jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 \
+            -keystore app/release.keystore \
+            -storepass:file app/storepass.txt \
+            -keypass:file app/keypass.txt \
+            app/build/outputs/bundle/release/app-release.aab \
+            "${{ secrets.KEY_ALIAS }}"
       - name: Upload AAB
         uses: actions/upload-artifact@v4
         with:

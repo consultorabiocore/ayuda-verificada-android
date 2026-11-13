@@ -27,7 +27,7 @@ jobs:
             -Pandroid.injected.signing.store.file=$PWD/app/release.keystore \
             -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
             -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
-            -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
+            -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD || secrets.KEYSTORE_PASSWORD }}
       - name: Upload AAB
         uses: actions/upload-artifact@v4
         with:

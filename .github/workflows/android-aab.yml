@@ -16,6 +16,12 @@ jobs:
         run: npm install
       - name: Sync Capacitor
         run: npx cap sync android
+      - name: Check secrets
+        run: |
+          if [ -z "${{ secrets.KEYSTORE_BASE64 }}" ]; then echo "KEYSTORE_BASE64 empty"; exit 1; fi
+          if [ -z "${{ secrets.KEYSTORE_PASSWORD }}" ]; then echo "KEYSTORE_PASSWORD empty"; exit 1; fi
+          if [ -z "${{ secrets.KEY_ALIAS }}" ]; then echo "KEY_ALIAS empty"; exit 1; fi
+          echo "Secrets present"
       - name: Decode keystore
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/app/release.keystore
